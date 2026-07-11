@@ -1,7 +1,11 @@
 # AGENTS.md — working notes for the CFB Dynasty Lore Hub
 
-Read `ARCHITECTURE.md` for the full roadmap and `docs/UPLOAD_DOMAINS.md` for the
-teams + upload-domain foundation. This file is the fast orientation.
+This file is the fast orientation for coding agents. For depth, use the docs hub
+**[`docs/INDEX.md`](docs/INDEX.md)** — especially [`docs/DATABASE.md`](docs/DATABASE.md),
+[`docs/API.md`](docs/API.md), [`docs/DATA-FLOW.md`](docs/DATA-FLOW.md), and
+[`docs/EXTENDING.md`](docs/EXTENDING.md) (recipes for adding a parser / domain /
+promoter / page). `ARCHITECTURE.md` has the roadmap; `docs/UPLOAD_DOMAINS.md`
+covers teams + upload domains in depth.
 
 ## Core invariant (do not violate)
 
