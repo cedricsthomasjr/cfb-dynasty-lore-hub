@@ -11,7 +11,11 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",

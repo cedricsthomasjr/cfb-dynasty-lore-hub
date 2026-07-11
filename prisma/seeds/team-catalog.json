@@ -1,0 +1,1074 @@
+[
+  {
+    "name": "Alabama",
+    "nickname": "Crimson Tide",
+    "abbreviation": "ALA",
+    "conferenceName": "SEC",
+    "primaryColor": "#9E1B32",
+    "secondaryColor": "#828A8F"
+  },
+  {
+    "name": "Arkansas",
+    "nickname": "Razorbacks",
+    "abbreviation": "ARK",
+    "conferenceName": "SEC",
+    "primaryColor": "#9D2235",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Auburn",
+    "nickname": "Tigers",
+    "abbreviation": "AUB",
+    "conferenceName": "SEC",
+    "primaryColor": "#0C2340",
+    "secondaryColor": "#E87722"
+  },
+  {
+    "name": "Florida",
+    "nickname": "Gators",
+    "abbreviation": "FLA",
+    "conferenceName": "SEC",
+    "primaryColor": "#0021A5",
+    "secondaryColor": "#FA4616"
+  },
+  {
+    "name": "Georgia",
+    "nickname": "Bulldogs",
+    "abbreviation": "UGA",
+    "conferenceName": "SEC",
+    "primaryColor": "#BA0C2F",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Kentucky",
+    "nickname": "Wildcats",
+    "abbreviation": "UK",
+    "conferenceName": "SEC",
+    "primaryColor": "#0033A0",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "LSU",
+    "nickname": "Tigers",
+    "abbreviation": "LSU",
+    "conferenceName": "SEC",
+    "primaryColor": "#461D7C",
+    "secondaryColor": "#FDD023"
+  },
+  {
+    "name": "Mississippi State",
+    "nickname": "Bulldogs",
+    "abbreviation": "MSST",
+    "conferenceName": "SEC",
+    "primaryColor": "#660000",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Missouri",
+    "nickname": "Tigers",
+    "abbreviation": "MIZ",
+    "conferenceName": "SEC",
+    "primaryColor": "#F1B82D",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Oklahoma",
+    "nickname": "Sooners",
+    "abbreviation": "OU",
+    "conferenceName": "SEC",
+    "primaryColor": "#841617",
+    "secondaryColor": "#FDF9D8"
+  },
+  {
+    "name": "Ole Miss",
+    "nickname": "Rebels",
+    "abbreviation": "MISS",
+    "conferenceName": "SEC",
+    "primaryColor": "#14213D",
+    "secondaryColor": "#CE1126"
+  },
+  {
+    "name": "South Carolina",
+    "nickname": "Gamecocks",
+    "abbreviation": "SCAR",
+    "conferenceName": "SEC",
+    "primaryColor": "#73000A",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Tennessee",
+    "nickname": "Volunteers",
+    "abbreviation": "TENN",
+    "conferenceName": "SEC",
+    "primaryColor": "#FF8200",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Texas",
+    "nickname": "Longhorns",
+    "abbreviation": "TEX",
+    "conferenceName": "SEC",
+    "primaryColor": "#BF5700",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Texas A&M",
+    "nickname": "Aggies",
+    "abbreviation": "TAMU",
+    "conferenceName": "SEC",
+    "primaryColor": "#500000",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Vanderbilt",
+    "nickname": "Commodores",
+    "abbreviation": "VAN",
+    "conferenceName": "SEC",
+    "primaryColor": "#866D4B",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Illinois",
+    "nickname": "Fighting Illini",
+    "abbreviation": "ILL",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#13294B",
+    "secondaryColor": "#E84A27"
+  },
+  {
+    "name": "Indiana",
+    "nickname": "Hoosiers",
+    "abbreviation": "IND",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#990000",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Iowa",
+    "nickname": "Hawkeyes",
+    "abbreviation": "IOWA",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#000000",
+    "secondaryColor": "#FFCD00"
+  },
+  {
+    "name": "Maryland",
+    "nickname": "Terrapins",
+    "abbreviation": "MD",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#E03A3E",
+    "secondaryColor": "#FFD520"
+  },
+  {
+    "name": "Michigan",
+    "nickname": "Wolverines",
+    "abbreviation": "MICH",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#00274C",
+    "secondaryColor": "#FFCB05"
+  },
+  {
+    "name": "Michigan State",
+    "nickname": "Spartans",
+    "abbreviation": "MSU",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#18453B",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Minnesota",
+    "nickname": "Golden Gophers",
+    "abbreviation": "MINN",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#7A0019",
+    "secondaryColor": "#FFCC33"
+  },
+  {
+    "name": "Nebraska",
+    "nickname": "Cornhuskers",
+    "abbreviation": "NEB",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#E41C38",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Northwestern",
+    "nickname": "Wildcats",
+    "abbreviation": "NW",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#4E2A84",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Ohio State",
+    "nickname": "Buckeyes",
+    "abbreviation": "OSU",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#BB0000",
+    "secondaryColor": "#666666"
+  },
+  {
+    "name": "Oregon",
+    "nickname": "Ducks",
+    "abbreviation": "ORE",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#154733",
+    "secondaryColor": "#FEE123"
+  },
+  {
+    "name": "Penn State",
+    "nickname": "Nittany Lions",
+    "abbreviation": "PSU",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#041E42",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Purdue",
+    "nickname": "Boilermakers",
+    "abbreviation": "PUR",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#CEB888",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Rutgers",
+    "nickname": "Scarlet Knights",
+    "abbreviation": "RUT",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#CC0033",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "UCLA",
+    "nickname": "Bruins",
+    "abbreviation": "UCLA",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#2D68C4",
+    "secondaryColor": "#F2A900"
+  },
+  {
+    "name": "USC",
+    "nickname": "Trojans",
+    "abbreviation": "USC",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#990000",
+    "secondaryColor": "#FFC72C"
+  },
+  {
+    "name": "Washington",
+    "nickname": "Huskies",
+    "abbreviation": "WASH",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#4B2E83",
+    "secondaryColor": "#B7A57A"
+  },
+  {
+    "name": "Wisconsin",
+    "nickname": "Badgers",
+    "abbreviation": "WIS",
+    "conferenceName": "Big Ten",
+    "primaryColor": "#C5050C",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Arizona",
+    "nickname": "Wildcats",
+    "abbreviation": "ARIZ",
+    "conferenceName": "Big 12",
+    "primaryColor": "#003366",
+    "secondaryColor": "#CC0033"
+  },
+  {
+    "name": "Arizona State",
+    "nickname": "Sun Devils",
+    "abbreviation": "ASU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#8C1D40",
+    "secondaryColor": "#FFC627"
+  },
+  {
+    "name": "Baylor",
+    "nickname": "Bears",
+    "abbreviation": "BAY",
+    "conferenceName": "Big 12",
+    "primaryColor": "#003015",
+    "secondaryColor": "#FFB81C"
+  },
+  {
+    "name": "BYU",
+    "nickname": "Cougars",
+    "abbreviation": "BYU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#002E5D",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Cincinnati",
+    "nickname": "Bearcats",
+    "abbreviation": "CIN",
+    "conferenceName": "Big 12",
+    "primaryColor": "#000000",
+    "secondaryColor": "#E00122"
+  },
+  {
+    "name": "Colorado",
+    "nickname": "Buffaloes",
+    "abbreviation": "COLO",
+    "conferenceName": "Big 12",
+    "primaryColor": "#CFB87C",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Houston",
+    "nickname": "Cougars",
+    "abbreviation": "HOU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Iowa State",
+    "nickname": "Cyclones",
+    "abbreviation": "ISU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#F1BE48"
+  },
+  {
+    "name": "Kansas",
+    "nickname": "Jayhawks",
+    "abbreviation": "KU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#0051BA",
+    "secondaryColor": "#E8000D"
+  },
+  {
+    "name": "Kansas State",
+    "nickname": "Wildcats",
+    "abbreviation": "KSU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#512888",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Oklahoma State",
+    "nickname": "Cowboys",
+    "abbreviation": "OKST",
+    "conferenceName": "Big 12",
+    "primaryColor": "#FF7300",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "TCU",
+    "nickname": "Horned Frogs",
+    "abbreviation": "TCU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#4D1979",
+    "secondaryColor": "#A3A9AC"
+  },
+  {
+    "name": "Texas Tech",
+    "nickname": "Red Raiders",
+    "abbreviation": "TTU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#CC0000",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "UCF",
+    "nickname": "Knights",
+    "abbreviation": "UCF",
+    "conferenceName": "Big 12",
+    "primaryColor": "#000000",
+    "secondaryColor": "#BA9B37"
+  },
+  {
+    "name": "Utah",
+    "nickname": "Utes",
+    "abbreviation": "UTAH",
+    "conferenceName": "Big 12",
+    "primaryColor": "#CC0000",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "West Virginia",
+    "nickname": "Mountaineers",
+    "abbreviation": "WVU",
+    "conferenceName": "Big 12",
+    "primaryColor": "#002855",
+    "secondaryColor": "#EAAA00"
+  },
+  {
+    "name": "Boston College",
+    "nickname": "Eagles",
+    "abbreviation": "BC",
+    "conferenceName": "ACC",
+    "primaryColor": "#98002E",
+    "secondaryColor": "#BC9B6A"
+  },
+  {
+    "name": "California",
+    "nickname": "Golden Bears",
+    "abbreviation": "CAL",
+    "conferenceName": "ACC",
+    "primaryColor": "#003262",
+    "secondaryColor": "#FDB515"
+  },
+  {
+    "name": "Clemson",
+    "nickname": "Tigers",
+    "abbreviation": "CLEM",
+    "conferenceName": "ACC",
+    "primaryColor": "#F56600",
+    "secondaryColor": "#522D80"
+  },
+  {
+    "name": "Duke",
+    "nickname": "Blue Devils",
+    "abbreviation": "DUKE",
+    "conferenceName": "ACC",
+    "primaryColor": "#003087",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Florida State",
+    "nickname": "Seminoles",
+    "abbreviation": "FSU",
+    "conferenceName": "ACC",
+    "primaryColor": "#782F40",
+    "secondaryColor": "#CEB888"
+  },
+  {
+    "name": "Georgia Tech",
+    "nickname": "Yellow Jackets",
+    "abbreviation": "GT",
+    "conferenceName": "ACC",
+    "primaryColor": "#B3A369",
+    "secondaryColor": "#003057"
+  },
+  {
+    "name": "Louisville",
+    "nickname": "Cardinals",
+    "abbreviation": "LOU",
+    "conferenceName": "ACC",
+    "primaryColor": "#AD0000",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Miami",
+    "nickname": "Hurricanes",
+    "abbreviation": "MIA",
+    "conferenceName": "ACC",
+    "primaryColor": "#F47321",
+    "secondaryColor": "#005030"
+  },
+  {
+    "name": "NC State",
+    "nickname": "Wolfpack",
+    "abbreviation": "NCST",
+    "conferenceName": "ACC",
+    "primaryColor": "#CC0000",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "North Carolina",
+    "nickname": "Tar Heels",
+    "abbreviation": "UNC",
+    "conferenceName": "ACC",
+    "primaryColor": "#7BAFD4",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Pittsburgh",
+    "nickname": "Panthers",
+    "abbreviation": "PITT",
+    "conferenceName": "ACC",
+    "primaryColor": "#003594",
+    "secondaryColor": "#FFB81C"
+  },
+  {
+    "name": "SMU",
+    "nickname": "Mustangs",
+    "abbreviation": "SMU",
+    "conferenceName": "ACC",
+    "primaryColor": "#0033A0",
+    "secondaryColor": "#C8102E"
+  },
+  {
+    "name": "Stanford",
+    "nickname": "Cardinal",
+    "abbreviation": "STAN",
+    "conferenceName": "ACC",
+    "primaryColor": "#8C1515",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Syracuse",
+    "nickname": "Orange",
+    "abbreviation": "SYR",
+    "conferenceName": "ACC",
+    "primaryColor": "#F76900",
+    "secondaryColor": "#000E54"
+  },
+  {
+    "name": "Virginia",
+    "nickname": "Cavaliers",
+    "abbreviation": "UVA",
+    "conferenceName": "ACC",
+    "primaryColor": "#232D4B",
+    "secondaryColor": "#F84C1E"
+  },
+  {
+    "name": "Virginia Tech",
+    "nickname": "Hokies",
+    "abbreviation": "VT",
+    "conferenceName": "ACC",
+    "primaryColor": "#630031",
+    "secondaryColor": "#CF4420"
+  },
+  {
+    "name": "Wake Forest",
+    "nickname": "Demon Deacons",
+    "abbreviation": "WAKE",
+    "conferenceName": "ACC",
+    "primaryColor": "#9E7E38",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Oregon State",
+    "nickname": "Beavers",
+    "abbreviation": "ORST",
+    "conferenceName": "Pac-12",
+    "primaryColor": "#DC4405",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Washington State",
+    "nickname": "Cougars",
+    "abbreviation": "WSU",
+    "conferenceName": "Pac-12",
+    "primaryColor": "#981E32",
+    "secondaryColor": "#5E6A71"
+  },
+  {
+    "name": "Army",
+    "nickname": "Black Knights",
+    "abbreviation": "ARMY",
+    "conferenceName": "American",
+    "primaryColor": "#000000",
+    "secondaryColor": "#D4BF91"
+  },
+  {
+    "name": "Charlotte",
+    "nickname": "49ers",
+    "abbreviation": "CLT",
+    "conferenceName": "American",
+    "primaryColor": "#046A38",
+    "secondaryColor": "#B9975B"
+  },
+  {
+    "name": "East Carolina",
+    "nickname": "Pirates",
+    "abbreviation": "ECU",
+    "conferenceName": "American",
+    "primaryColor": "#592A8A",
+    "secondaryColor": "#FDC82F"
+  },
+  {
+    "name": "Florida Atlantic",
+    "nickname": "Owls",
+    "abbreviation": "FAU",
+    "conferenceName": "American",
+    "primaryColor": "#003366",
+    "secondaryColor": "#CC0000"
+  },
+  {
+    "name": "Memphis",
+    "nickname": "Tigers",
+    "abbreviation": "MEM",
+    "conferenceName": "American",
+    "primaryColor": "#003087",
+    "secondaryColor": "#898D8D"
+  },
+  {
+    "name": "Navy",
+    "nickname": "Midshipmen",
+    "abbreviation": "NAVY",
+    "conferenceName": "American",
+    "primaryColor": "#00205B",
+    "secondaryColor": "#C5B783"
+  },
+  {
+    "name": "North Texas",
+    "nickname": "Mean Green",
+    "abbreviation": "UNT",
+    "conferenceName": "American",
+    "primaryColor": "#00853E",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Rice",
+    "nickname": "Owls",
+    "abbreviation": "RICE",
+    "conferenceName": "American",
+    "primaryColor": "#00205B",
+    "secondaryColor": "#C1C6C8"
+  },
+  {
+    "name": "South Florida",
+    "nickname": "Bulls",
+    "abbreviation": "USF",
+    "conferenceName": "American",
+    "primaryColor": "#006747",
+    "secondaryColor": "#CFC493"
+  },
+  {
+    "name": "Temple",
+    "nickname": "Owls",
+    "abbreviation": "TEM",
+    "conferenceName": "American",
+    "primaryColor": "#9D2235",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Tulane",
+    "nickname": "Green Wave",
+    "abbreviation": "TULN",
+    "conferenceName": "American",
+    "primaryColor": "#006747",
+    "secondaryColor": "#418FDE"
+  },
+  {
+    "name": "Tulsa",
+    "nickname": "Golden Hurricane",
+    "abbreviation": "TLSA",
+    "conferenceName": "American",
+    "primaryColor": "#003A70",
+    "secondaryColor": "#C5B358"
+  },
+  {
+    "name": "UAB",
+    "nickname": "Blazers",
+    "abbreviation": "UAB",
+    "conferenceName": "American",
+    "primaryColor": "#1E6B52",
+    "secondaryColor": "#F4C300"
+  },
+  {
+    "name": "UTSA",
+    "nickname": "Roadrunners",
+    "abbreviation": "UTSA",
+    "conferenceName": "American",
+    "primaryColor": "#0C2340",
+    "secondaryColor": "#F15A22"
+  },
+  {
+    "name": "Air Force",
+    "nickname": "Falcons",
+    "abbreviation": "AFA",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#003087",
+    "secondaryColor": "#8A8D8F"
+  },
+  {
+    "name": "Boise State",
+    "nickname": "Broncos",
+    "abbreviation": "BSU",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#0033A0",
+    "secondaryColor": "#D64309"
+  },
+  {
+    "name": "Colorado State",
+    "nickname": "Rams",
+    "abbreviation": "CSU",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#1E4D2B",
+    "secondaryColor": "#C8C372"
+  },
+  {
+    "name": "Fresno State",
+    "nickname": "Bulldogs",
+    "abbreviation": "FRES",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#DB0032",
+    "secondaryColor": "#002E5D"
+  },
+  {
+    "name": "Hawaii",
+    "nickname": "Rainbow Warriors",
+    "abbreviation": "HAW",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#024731",
+    "secondaryColor": "#C8C8C8"
+  },
+  {
+    "name": "Nevada",
+    "nickname": "Wolf Pack",
+    "abbreviation": "NEV",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#003366",
+    "secondaryColor": "#807F84"
+  },
+  {
+    "name": "New Mexico",
+    "nickname": "Lobos",
+    "abbreviation": "UNM",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#BA0C2F",
+    "secondaryColor": "#63666A"
+  },
+  {
+    "name": "San Diego State",
+    "nickname": "Aztecs",
+    "abbreviation": "SDSU",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#A6192E",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "San Jose State",
+    "nickname": "Spartans",
+    "abbreviation": "SJSU",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#0055A2",
+    "secondaryColor": "#E5A823"
+  },
+  {
+    "name": "UNLV",
+    "nickname": "Rebels",
+    "abbreviation": "UNLV",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#B10202",
+    "secondaryColor": "#666666"
+  },
+  {
+    "name": "Utah State",
+    "nickname": "Aggies",
+    "abbreviation": "USU",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#0F2439",
+    "secondaryColor": "#8A8D8F"
+  },
+  {
+    "name": "Wyoming",
+    "nickname": "Cowboys",
+    "abbreviation": "WYO",
+    "conferenceName": "Mountain West",
+    "primaryColor": "#492F24",
+    "secondaryColor": "#FFC425"
+  },
+  {
+    "name": "Appalachian State",
+    "nickname": "Mountaineers",
+    "abbreviation": "APP",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#000000",
+    "secondaryColor": "#FFCC00"
+  },
+  {
+    "name": "Arkansas State",
+    "nickname": "Red Wolves",
+    "abbreviation": "ARST",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#CC092F",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Coastal Carolina",
+    "nickname": "Chanticleers",
+    "abbreviation": "CCU",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#006F71",
+    "secondaryColor": "#A27752"
+  },
+  {
+    "name": "Georgia Southern",
+    "nickname": "Eagles",
+    "abbreviation": "GASO",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#011E41",
+    "secondaryColor": "#87714D"
+  },
+  {
+    "name": "Georgia State",
+    "nickname": "Panthers",
+    "abbreviation": "GAST",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#0039A6",
+    "secondaryColor": "#CC0000"
+  },
+  {
+    "name": "James Madison",
+    "nickname": "Dukes",
+    "abbreviation": "JMU",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#450084",
+    "secondaryColor": "#CBB677"
+  },
+  {
+    "name": "Louisiana",
+    "nickname": "Ragin' Cajuns",
+    "abbreviation": "ULL",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#CE181E",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Louisiana-Monroe",
+    "nickname": "Warhawks",
+    "abbreviation": "ULM",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#800029",
+    "secondaryColor": "#FFB300"
+  },
+  {
+    "name": "Marshall",
+    "nickname": "Thundering Herd",
+    "abbreviation": "MRSH",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#00B140",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Old Dominion",
+    "nickname": "Monarchs",
+    "abbreviation": "ODU",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#003057",
+    "secondaryColor": "#7C878E"
+  },
+  {
+    "name": "South Alabama",
+    "nickname": "Jaguars",
+    "abbreviation": "USA",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#00205B",
+    "secondaryColor": "#BF0D3E"
+  },
+  {
+    "name": "Southern Miss",
+    "nickname": "Golden Eagles",
+    "abbreviation": "USM",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#000000",
+    "secondaryColor": "#FFAA3C"
+  },
+  {
+    "name": "Texas State",
+    "nickname": "Bobcats",
+    "abbreviation": "TXST",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#501214",
+    "secondaryColor": "#AC9155"
+  },
+  {
+    "name": "Troy",
+    "nickname": "Trojans",
+    "abbreviation": "TROY",
+    "conferenceName": "Sun Belt",
+    "primaryColor": "#8A2432",
+    "secondaryColor": "#8A8D8F"
+  },
+  {
+    "name": "Akron",
+    "nickname": "Zips",
+    "abbreviation": "AKR",
+    "conferenceName": "MAC",
+    "primaryColor": "#00285E",
+    "secondaryColor": "#84754E"
+  },
+  {
+    "name": "Ball State",
+    "nickname": "Cardinals",
+    "abbreviation": "BALL",
+    "conferenceName": "MAC",
+    "primaryColor": "#BA0C2F",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Bowling Green",
+    "nickname": "Falcons",
+    "abbreviation": "BGSU",
+    "conferenceName": "MAC",
+    "primaryColor": "#4F2C1D",
+    "secondaryColor": "#FF7300"
+  },
+  {
+    "name": "Buffalo",
+    "nickname": "Bulls",
+    "abbreviation": "BUFF",
+    "conferenceName": "MAC",
+    "primaryColor": "#005BBB",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Central Michigan",
+    "nickname": "Chippewas",
+    "abbreviation": "CMU",
+    "conferenceName": "MAC",
+    "primaryColor": "#6A0032",
+    "secondaryColor": "#FFC82E"
+  },
+  {
+    "name": "Eastern Michigan",
+    "nickname": "Eagles",
+    "abbreviation": "EMU",
+    "conferenceName": "MAC",
+    "primaryColor": "#006633",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Kent State",
+    "nickname": "Golden Flashes",
+    "abbreviation": "KENT",
+    "conferenceName": "MAC",
+    "primaryColor": "#002664",
+    "secondaryColor": "#EFAF00"
+  },
+  {
+    "name": "Miami (OH)",
+    "nickname": "RedHawks",
+    "abbreviation": "M-OH",
+    "conferenceName": "MAC",
+    "primaryColor": "#B61E2E",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Northern Illinois",
+    "nickname": "Huskies",
+    "abbreviation": "NIU",
+    "conferenceName": "MAC",
+    "primaryColor": "#BA0C2F",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Ohio",
+    "nickname": "Bobcats",
+    "abbreviation": "OHIO",
+    "conferenceName": "MAC",
+    "primaryColor": "#00694E",
+    "secondaryColor": "#CDA077"
+  },
+  {
+    "name": "Toledo",
+    "nickname": "Rockets",
+    "abbreviation": "TOL",
+    "conferenceName": "MAC",
+    "primaryColor": "#15397F",
+    "secondaryColor": "#FFD400"
+  },
+  {
+    "name": "Western Michigan",
+    "nickname": "Broncos",
+    "abbreviation": "WMU",
+    "conferenceName": "MAC",
+    "primaryColor": "#6C4023",
+    "secondaryColor": "#B5A167"
+  },
+  {
+    "name": "Florida International",
+    "nickname": "Panthers",
+    "abbreviation": "FIU",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#081E3F",
+    "secondaryColor": "#B6862C"
+  },
+  {
+    "name": "Jacksonville State",
+    "nickname": "Gamecocks",
+    "abbreviation": "JVST",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#CC0000",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Kennesaw State",
+    "nickname": "Owls",
+    "abbreviation": "KENN",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#000000",
+    "secondaryColor": "#FDB913"
+  },
+  {
+    "name": "Liberty",
+    "nickname": "Flames",
+    "abbreviation": "LIB",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#002D62",
+    "secondaryColor": "#A6192E"
+  },
+  {
+    "name": "Louisiana Tech",
+    "nickname": "Bulldogs",
+    "abbreviation": "LT",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#002F8B",
+    "secondaryColor": "#E31B23"
+  },
+  {
+    "name": "Middle Tennessee",
+    "nickname": "Blue Raiders",
+    "abbreviation": "MTSU",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#0066CC",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "New Mexico State",
+    "nickname": "Aggies",
+    "abbreviation": "NMSU",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#8C0B42",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "Sam Houston",
+    "nickname": "Bearkats",
+    "abbreviation": "SHSU",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#F56600",
+    "secondaryColor": "#FFFFFF"
+  },
+  {
+    "name": "UTEP",
+    "nickname": "Miners",
+    "abbreviation": "UTEP",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#041E42",
+    "secondaryColor": "#FF8200"
+  },
+  {
+    "name": "Western Kentucky",
+    "nickname": "Hilltoppers",
+    "abbreviation": "WKU",
+    "conferenceName": "Conference USA",
+    "primaryColor": "#C60C30",
+    "secondaryColor": "#000000"
+  },
+  {
+    "name": "Notre Dame",
+    "nickname": "Fighting Irish",
+    "abbreviation": "ND",
+    "conferenceName": "FBS Independents",
+    "primaryColor": "#0C2340",
+    "secondaryColor": "#C99700"
+  },
+  {
+    "name": "UConn",
+    "nickname": "Huskies",
+    "abbreviation": "CONN",
+    "conferenceName": "FBS Independents",
+    "primaryColor": "#000E2F",
+    "secondaryColor": "#E4002B"
+  },
+  {
+    "name": "UMass",
+    "nickname": "Minutemen",
+    "abbreviation": "MASS",
+    "conferenceName": "FBS Independents",
+    "primaryColor": "#881C1C",
+    "secondaryColor": "#000000"
+  }
+]

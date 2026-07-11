@@ -79,3 +79,23 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
 ];
+
+/**
+ * Planned per-domain upload pages (Phase 2.5 follow-up). The backend contract
+ * for these already exists — every UploadDomain has a handler in the domain
+ * registry (src/lib/ingestion/domains) and the upload API accepts a `domain`.
+ * These routes are intentionally NOT built yet and NOT wired into NAV_SECTIONS;
+ * this constant documents the intended surface. See docs/UPLOAD_DOMAINS.md.
+ */
+export const UPLOAD_ROUTES = {
+  hub: "/upload",
+  teamLogo: "/upload/team/logo",
+  teamStats: "/upload/team/stats",
+  playersRoster: "/upload/players/roster",
+  playersProfile: "/upload/players/profile",
+  playersStats: "/upload/players/stats",
+  coaches: "/upload/coaches",
+  gamesBoxScore: "/upload/games/box-score",
+  leagueRankings: "/upload/league/rankings",
+  leagueStandings: "/upload/league/standings",
+} as const;

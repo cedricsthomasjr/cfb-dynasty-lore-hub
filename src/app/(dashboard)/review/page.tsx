@@ -21,6 +21,7 @@ export default async function ReviewPage() {
     orderBy: { updatedAt: "desc" },
     take: 50,
     include: {
+      team: { select: { name: true } },
       parseResults: {
         orderBy: { createdAt: "desc" },
         include: { entities: { orderBy: { entityType: "asc" } } },
@@ -52,6 +53,9 @@ export default async function ReviewPage() {
       publicUrl: u.publicUrl,
       screenType: u.screenType,
       status: u.status,
+      domain: u.domain,
+      inputMethod: u.inputMethod,
+      teamName: u.team?.name ?? null,
       detectionConfidence: u.detectionConfidence,
       parseConfidence: latest?.confidence ?? null,
       entities: entities.map((e) => ({

@@ -135,6 +135,31 @@ enum ArticleStatus {
   ARCHIVED
 }
 
+// Upload domain: WHAT kind of data an upload carries (two axes with InputMethod).
+// The domain registry (src/lib/ingestion/domains) maps each value to a handler;
+// team-scoped domains must target the uploader's controlled team.
+enum UploadDomain {
+  TEAM_LOGO
+  TEAM_IDENTITY
+  TEAM_SEASON_STATS
+  TEAM_GAME_STATS
+  PLAYER_ROSTER
+  PLAYER_PROFILE
+  PLAYER_GAME_STATS
+  PLAYER_SEASON_STATS
+  COACH_PROFILE
+  GAME_BOX_SCORE
+  RANKINGS
+  CONFERENCE_STANDINGS
+  AWARDS
+}
+
+// Upload input method: HOW the data arrives.
+enum InputMethod {
+  SCREENSHOT // vision pipeline (detect -> parse -> stage)
+  MANUAL // typed JSON payload validated against a domain Zod schema
+}
+
 // ───────────────────────────────────── Dynasty / Time ────────────────────────────────────
 
 model Dynasty {
@@ -155,8 +180,67 @@ model Dynasty {
   historical   HistoricalRecord[]
   schoolRecords SchoolRecord[]
   awards       Award[]
+  memberships  DynastyMembership[]
 
   @@index([name])
+}
+
+// ─────────────────────────── Users / Membership (one team per user) ───────────
+// Auth is stubbed for now (see src/lib/auth). A DynastyMembership records which
+// single Team a user controls in a given dynasty. Two DB uniques enforce the
+// invariants: one membership per (user, dynasty) and one controller per team.
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships DynastyMembership[]
+  uploads     Upload[]
+}
+
+model DynastyMembership {
+  id               String  @id @default(cuid())
+  userId           String
+  dynastyId        String
+  controlledTeamId String? // nullable until the user picks a team during onboarding
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dynasty        Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  controlledTeam Team?   @relation("ControlledTeam", fields: [controlledTeamId], references: [id])
+
+  @@unique([userId, dynastyId]) // one membership per user per dynasty
+  @@unique([dynastyId, controlledTeamId]) // one user per controlled team (NULLs are distinct in Postgres)
+  @@index([userId])
+  @@index([dynastyId])
+}
+
+// ─────────────────────────── Team Catalog (global FBS master list) ────────────
+// Seeded once (prisma db seed). On dynasty creation every catalog row is copied
+// into a dynasty-scoped Team. Custom teams are Team rows with catalogTeamId=null.
+
+model TeamCatalog {
+  id             String  @id @default(cuid())
+  slug           String  @unique
+  name           String
+  nickname       String?
+  abbreviation   String?
+  conferenceName String?
+  primaryColor   String?
+  secondaryColor String?
+  defaultLogoUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teams Team[]
+
+  @@index([conferenceName])
 }
 
 model Season {
@@ -215,21 +299,26 @@ model Team {
   id           String  @id @default(cuid())
   dynastyId    String
   conferenceId String?
+  catalogTeamId String? // the TeamCatalog row this was seeded from (null for custom teams)
   name         String
   nickname     String? // mascot
   abbreviation String?
   primaryColor String?
   secondaryColor String?
   logoUrl      String?
+  isCustom     Boolean @default(false) // true = user-added, dynasty-scoped only
+  // Denormalized flag synced from DynastyMembership on write. The membership is
+  // the source of truth for "who controls what"; this mirrors it for fast reads.
   isUserControlled Boolean @default(false)
 
   sourceUploadId String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  dynasty      Dynasty     @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
-  conference   Conference? @relation(fields: [conferenceId], references: [id])
-  sourceUpload Upload?     @relation("TeamSource", fields: [sourceUploadId], references: [id])
+  dynasty      Dynasty      @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  conference   Conference?  @relation(fields: [conferenceId], references: [id])
+  catalogTeam  TeamCatalog? @relation(fields: [catalogTeamId], references: [id])
+  sourceUpload Upload?      @relation("TeamSource", fields: [sourceUploadId], references: [id])
 
   players      Player[]
   coaches      Coach[]
@@ -240,10 +329,13 @@ model Team {
   teamGameStats     TeamGameStat[]
   teamSeasonStats   TeamSeasonStat[]
   schoolRecords     SchoolRecord[]
+  uploads           Upload[]            @relation("UploadTeam")
+  controlledByMemberships DynastyMembership[] @relation("ControlledTeam")
 
   @@unique([dynastyId, name])
   @@index([dynastyId])
   @@index([conferenceId])
+  @@index([catalogTeamId])
 }
 
 model Player {
@@ -635,21 +727,30 @@ model NewsArticle {
 
 model Upload {
   id          String       @id @default(cuid())
+  // dynastyId stays nullable at the DB level for pre-existing rows, but the
+  // upload API requires it for every new upload.
   dynastyId   String?
+  userId      String?      // uploader; required by the API once auth resolves
+  teamId      String?      // team-scoped domains bind to the uploader's controlled team
+  domain      UploadDomain? // WHAT this upload carries; required by the API
+  inputMethod InputMethod  @default(SCREENSHOT) // HOW it arrived
   originalName String
-  storageKey  String       // path/key in the storage backend
+  storageKey  String       // path/key in the storage backend (sentinel for MANUAL)
   publicUrl   String?      // served thumbnail/preview if any
   mimeType    String
   sizeBytes   Int
-  contentHash String       @unique // idempotency: same screenshot -> same hash
+  contentHash String       @unique // idempotency: same screenshot/payload -> same hash
   screenType  ScreenType   @default(UNKNOWN)
   status      UploadStatus @default(UPLOADED)
   detectionConfidence Float?
+  manualPayload Json?      // raw typed payload for MANUAL uploads (validated at process time)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   dynasty     Dynasty?      @relation(fields: [dynastyId], references: [id])
+  user        User?         @relation(fields: [userId], references: [id])
+  team        Team?         @relation("UploadTeam", fields: [teamId], references: [id])
   parseResults ParseResult[]
 
   // reverse provenance relations
@@ -666,6 +767,9 @@ model Upload {
   @@index([dynastyId])
   @@index([status])
   @@index([screenType])
+  @@index([userId])
+  @@index([teamId])
+  @@index([domain])
 }
 
 // One parser run over one upload. Holds raw structured extraction + confidence,

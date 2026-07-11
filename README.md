@@ -30,6 +30,20 @@ Parsing, canonical promotion, historical aggregation, and the AI content engine
 arrive in later phases — the seams for each already exist
 (`src/lib/ingestion/`, staging tables, `NewsArticle.sourceData`).
 
+## Teams & upload domains (Phase 2.5)
+
+The teams + ingestion foundation is in place (see
+[`docs/UPLOAD_DOMAINS.md`](docs/UPLOAD_DOMAINS.md) and [`AGENTS.md`](AGENTS.md)):
+
+- **Team catalog → dynasty teams → controlled team.** `TeamCatalog` is a global
+  seeded FBS list; creating a dynasty copies it into `Team` rows; each user
+  controls exactly one team (enforced in DB + API). Custom teams are supported.
+- **Upload domains.** Every upload is tagged with a `domain` and `inputMethod`
+  (`SCREENSHOT` or `MANUAL`). A domain registry maps each domain to a parser
+  and/or a Zod schema. Team-scoped domains must target the controlled team.
+- **Stub auth.** `getCurrentUser()` returns a seeded dev user until real auth
+  lands. Seed both with `npm run db:seed`.
+
 ## Getting started
 
 ```bash

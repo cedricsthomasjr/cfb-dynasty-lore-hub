@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UploadCloud, CheckCircle2, AlertCircle, Loader2, ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
@@ -28,20 +28,73 @@ type UploadState =
     } & Uploaded)
   | { status: "error"; message: string };
 
+interface DynastyOption {
+  id: string;
+  name: string;
+  controlledTeam: { id: string; name: string } | null;
+}
+
+interface DomainOption {
+  domain: string;
+  label: string;
+  description: string;
+  allowedInputMethods: string[];
+  requiresControlledTeam: boolean;
+}
+
 const ACCEPT = "image/png,image/jpeg,image/webp";
+const SELECT_CLASS =
+  "w-full rounded-md border bg-background px-3 py-2 text-sm disabled:opacity-50";
 
 export default function UploadPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<UploadState>({ status: "idle" });
   const [dragOver, setDragOver] = useState(false);
 
+  const [dynasties, setDynasties] = useState<DynastyOption[]>([]);
+  const [domains, setDomains] = useState<DomainOption[]>([]);
+  const [dynastyId, setDynastyId] = useState("");
+  const [domain, setDomain] = useState("");
+
+  // Load the dynasty + domain options that the upload must be tagged with.
+  useEffect(() => {
+    void (async () => {
+      const [dRes, domRes] = await Promise.all([
+        fetch("/api/dynasties"),
+        fetch("/api/upload/domains"),
+      ]);
+      const dJson = await dRes.json();
+      const domJson = await domRes.json();
+      const dynList: DynastyOption[] = dJson.dynasties ?? [];
+      // This page drives the screenshot path only (manual input is API-only).
+      const domList: DomainOption[] = (domJson.domains ?? []).filter(
+        (d: DomainOption) => d.allowedInputMethods.includes("SCREENSHOT")
+      );
+      setDynasties(dynList);
+      setDomains(domList);
+      if (dynList[0]) setDynastyId(dynList[0].id);
+      if (domList[0]) setDomain(domList[0].domain);
+    })();
+  }, []);
+
+  const selectedDynasty = dynasties.find((d) => d.id === dynastyId) ?? null;
+  const selectedDomain = domains.find((d) => d.domain === domain) ?? null;
+  const needsTeam = selectedDomain?.requiresControlledTeam ?? false;
+  const controlledTeam = selectedDynasty?.controlledTeam ?? null;
+  const teamBlocked = needsTeam && !controlledTeam;
+  const canUpload = Boolean(dynastyId && domain) && !teamBlocked;
+
   async function upload(file: File) {
+    if (!canUpload) return;
     setState({ status: "uploading" });
     let uploaded: Uploaded;
     let uploadId: string;
     try {
       const body = new FormData();
       body.append("file", file);
+      body.append("domain", domain);
+      body.append("dynastyId", dynastyId);
+      if (needsTeam && controlledTeam) body.append("teamId", controlledTeam.id);
       const res = await fetch("/api/upload", { method: "POST", body });
       const json = await res.json();
       if (!res.ok) {
@@ -59,7 +112,7 @@ export default function UploadPage() {
       return;
     }
 
-    // Kick off detection + parsing (Phase 2 pipeline).
+    // Kick off detection + parsing (domain-aware pipeline).
     setState({ status: "processing", ...uploaded });
     try {
       const res = await fetch(`/api/uploads/${uploadId}/process`, {
@@ -99,23 +152,88 @@ export default function UploadPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Upload Screenshot"
-        description="Add a College Football 25 screenshot. It is stored, then the screen is detected and parsed into structured data awaiting your review."
+        description="Tag a College Football 25 screenshot with its dynasty and data domain. It is stored, then detected and parsed into structured data awaiting your review."
       />
+
+      {dynasties.length === 0 ? (
+        <Card className="mb-4 border-amber-500/40">
+          <CardContent className="flex items-center gap-3 py-4 text-sm">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-500" />
+            <p>
+              No dynasty yet. Create one via{" "}
+              <code className="rounded bg-muted px-1">POST /api/dynasties</code>{" "}
+              and set a controlled team before uploading.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="mb-4">
+          <CardContent className="grid gap-4 py-4 sm:grid-cols-2">
+            <label className="space-y-1 text-sm">
+              <span className="font-medium">Dynasty</span>
+              <select
+                className={SELECT_CLASS}
+                value={dynastyId}
+                onChange={(e) => setDynastyId(e.target.value)}
+                disabled={busy}
+              >
+                {dynasties.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                    {d.controlledTeam ? ` — ${d.controlledTeam.name}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-1 text-sm">
+              <span className="font-medium">Data domain</span>
+              <select
+                className={SELECT_CLASS}
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                disabled={busy}
+              >
+                {domains.map((d) => (
+                  <option key={d.domain} value={d.domain}>
+                    {d.label}
+                    {d.requiresControlledTeam ? " (team)" : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {selectedDomain ? (
+              <p className="text-xs text-muted-foreground sm:col-span-2">
+                {selectedDomain.description}
+                {needsTeam && controlledTeam
+                  ? ` · Targets your controlled team: ${controlledTeam.name}.`
+                  : ""}
+              </p>
+            ) : null}
+            {teamBlocked ? (
+              <p className="text-xs text-destructive sm:col-span-2">
+                This domain is team-scoped. Set a controlled team for this dynasty
+                first (POST /api/dynasties/{dynastyId}/controlled-team).
+              </p>
+            ) : null}
+          </CardContent>
+        </Card>
+      )}
 
       <Card
         className={cn(
           "border-2 border-dashed transition-colors",
-          dragOver && "border-primary bg-primary/5"
+          dragOver && "border-primary bg-primary/5",
+          !canUpload && "opacity-60"
         )}
         onDragOver={(e) => {
           e.preventDefault();
-          setDragOver(true);
+          if (canUpload) setDragOver(true);
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={(e) => {
           e.preventDefault();
           setDragOver(false);
-          onFiles(e.dataTransfer.files);
+          if (canUpload) onFiles(e.dataTransfer.files);
         }}
       >
         <CardContent className="flex flex-col items-center justify-center gap-4 py-16 text-center">
@@ -134,7 +252,10 @@ export default function UploadPage() {
               PNG, JPEG, or WebP · up to 10&nbsp;MB
             </p>
           </div>
-          <Button onClick={() => inputRef.current?.click()} disabled={busy}>
+          <Button
+            onClick={() => inputRef.current?.click()}
+            disabled={busy || !canUpload}
+          >
             {state.status === "uploading"
               ? "Uploading…"
               : state.status === "processing"

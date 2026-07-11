@@ -23,6 +23,9 @@ export interface ReviewUpload {
   publicUrl: string | null;
   screenType: string;
   status: string;
+  domain: string | null;
+  inputMethod: string;
+  teamName: string | null;
   detectionConfidence: number | null;
   parseConfidence: number | null;
   entities: ReviewEntity[];
@@ -110,10 +113,14 @@ export function ReviewCard({ upload }: { upload: ReviewUpload }) {
           <div className="space-y-1">
             <p className="font-medium">{upload.originalName}</p>
             <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              {upload.domain ? (
+                <Badge>{upload.domain.replace(/_/g, " ")}</Badge>
+              ) : null}
+              <Badge variant="outline">{upload.inputMethod.toLowerCase()}</Badge>
               <Badge variant="secondary">{upload.screenType}</Badge>
-              <span>detect {pct(upload.detectionConfidence)}</span>
-              <span>·</span>
-              <span>parse {pct(upload.parseConfidence)}</span>
+              {upload.teamName ? <span>· {upload.teamName}</span> : null}
+              <span>· detect {pct(upload.detectionConfidence)}</span>
+              <span>· parse {pct(upload.parseConfidence)}</span>
             </div>
           </div>
         </div>

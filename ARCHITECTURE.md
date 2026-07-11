@@ -19,6 +19,28 @@ Scaffolding, Prisma schema, env config, layout/nav shell, raw upload endpoint (s
 - **Idempotency + merge**: dedupe repeated uploads, reconcile conflicting values by confidence + recency.
 - Human-in-the-loop **review queue** UI for low-confidence extractions.
 
+### Phase 2.5 — Teams & Upload Domains (foundation)
+Between the ingestion pipeline and canonical promotion sits the teams + upload
+foundation (full detail in [`docs/UPLOAD_DOMAINS.md`](docs/UPLOAD_DOMAINS.md)):
+
+- **Three-layer team model.** `TeamCatalog` (global, seeded FBS list) → `Team`
+  (per-dynasty copy, plus user-added custom teams) → `DynastyMembership.controlledTeamId`
+  (the one team a user manages). Creating a dynasty copies every catalog row into
+  dynasty-scoped `Team` rows via `src/lib/dynasty/bootstrap.ts`.
+- **One controlled team per user per dynasty**, enforced by two DB uniques on
+  `DynastyMembership` and in the API (change = swap, not accumulate).
+- **Upload domains (two axes).** Every upload carries a `domain` (`UploadDomain`)
+  and `inputMethod` (`SCREENSHOT` | `MANUAL`). A **domain registry**
+  (`src/lib/ingestion/domains/`) parallels the parser registry — one handler per
+  domain, mapping screenshots to parsers and manual input to Zod schemas.
+  Team-scoped domains must target the user's controlled team.
+- **Stub auth.** `getCurrentUser()` (`src/lib/auth`) resolves a seeded dev user;
+  real auth swaps in without route changes.
+
+Still staging-only — this phase does not promote to canonical tables. The
+per-domain upload pages are documented (`UPLOAD_ROUTES` in `src/lib/nav.ts`) but
+intentionally not built yet.
+
 ### Phase 3 — Canonical Data & Core Read Pages
 Promote validated staging data into canonical entities. Build the real data-backed pages: Rankings (Top 25 / CFP), Standings, Schedule, Game Center, Team pages, Player/Coach profiles. Everything reads from canonical tables.
 

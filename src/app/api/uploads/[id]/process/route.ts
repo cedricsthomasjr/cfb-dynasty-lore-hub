@@ -7,8 +7,10 @@ export const maxDuration = 60;
 
 /**
  * POST /api/uploads/[id]/process
- * Runs the Phase 2 ingestion pipeline (detect -> parse -> stage) for one upload.
- * Pass { force: true } to re-run an already-processed upload.
+ * Runs the domain-aware ingestion pipeline for one upload. Screenshot uploads
+ * detect (or skip detection when the domain pins a screen type) then parse;
+ * manual uploads validate their payload and stage it directly — the pipeline
+ * dispatches on the upload's inputMethod/domain. Pass { force: true } to re-run.
  */
 export async function POST(
   req: NextRequest,
