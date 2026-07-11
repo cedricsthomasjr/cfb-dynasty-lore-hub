@@ -1,0 +1,702 @@
+// CFB Dynasty Lore Hub — Prisma schema
+// Philosophy: the database is the single source of truth.
+// Vision extracts -> staging (Upload/ParseResult/ExtractedEntity) -> validated -> canonical tables.
+// Canonical rows carry provenance (sourceUploadId + confidence) so every fact is auditable.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────────────────────────────────── Enums ─────────────────────────────────────────
+
+enum ScreenType {
+  DYNASTY_HOME
+  TOP_25
+  CFP_RANKINGS
+  CONFERENCE_STANDINGS
+  TEAM_SCHEDULE
+  TEAM_STATS
+  NATIONAL_LEADERS
+  BOX_SCORE
+  PLAYER_STATS
+  TEAM_ROSTER
+  AWARDS
+  HEISMAN_WATCH
+  SCHOOL_RECORDS
+  PLAYER_CARD
+  GAME_RESULTS
+  SEASON_STATISTICS
+  UNKNOWN
+}
+
+enum UploadStatus {
+  UPLOADED // stored, not yet processed (Phase 1 stops here)
+  DETECTING // classifier running
+  PARSING // parser running
+  NEEDS_REVIEW // low-confidence, awaiting human validation
+  VALIDATED // promoted to canonical
+  FAILED
+  DUPLICATE
+}
+
+enum WeekType {
+  PRESEASON
+  REGULAR
+  CONFERENCE_CHAMPIONSHIP
+  BOWL
+  PLAYOFF
+  NATIONAL_CHAMPIONSHIP
+  OFFSEASON
+}
+
+enum GameStatus {
+  SCHEDULED
+  IN_PROGRESS
+  FINAL
+}
+
+enum PollType {
+  AP
+  COACHES
+  CFP
+  PLAYOFF_COMMITTEE
+}
+
+enum ClassYear {
+  FR
+  SO
+  JR
+  SR
+  RS_FR
+  RS_SO
+  RS_JR
+  RS_SR
+}
+
+enum CoachRole {
+  HEAD_COACH
+  OFFENSIVE_COORDINATOR
+  DEFENSIVE_COORDINATOR
+  POSITION_COACH
+}
+
+enum RecordScope {
+  SCHOOL // single-school record book
+  LEAGUE // league/national record
+  CONFERENCE
+}
+
+enum HistoricalRecordKind {
+  NATIONAL_CHAMPIONSHIP
+  CONFERENCE_CHAMPIONSHIP
+  BOWL_APPEARANCE
+  BOWL_WIN
+  PLAYOFF_APPEARANCE
+  RIVALRY_RESULT
+  UNDEFEATED_SEASON
+  COACHING_MILESTONE
+}
+
+enum TimelineEventType {
+  CHAMPIONSHIP
+  UPSET
+  RECORD_BROKEN
+  AWARD
+  MILESTONE
+  RIVALRY
+  COACHING_CHANGE
+  HISTORIC_GAME
+}
+
+enum ArticleType {
+  BREAKING_NEWS
+  WEEKLY_HEADLINE
+  WEEKEND_RECAP
+  GAME_PREVIEW
+  GAME_RECAP
+  POWER_RANKINGS
+  AWARD_ARTICLE
+  CONFERENCE_RACE
+  CFP_RACE
+  RIVALRY_FEATURE
+  RECORD_ALERT
+  HISTORICAL_MILESTONE
+  SEASON_REVIEW
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ───────────────────────────────────── Dynasty / Time ────────────────────────────────────
+
+model Dynasty {
+  id        String   @id @default(cuid())
+  name      String
+  schoolName String? // the user-controlled program
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seasons      Season[]
+  conferences  Conference[]
+  teams        Team[]
+  players      Player[]
+  coaches      Coach[]
+  uploads      Upload[]
+  articles     NewsArticle[]
+  timeline     TimelineEvent[]
+  historical   HistoricalRecord[]
+  schoolRecords SchoolRecord[]
+  awards       Award[]
+
+  @@index([name])
+}
+
+model Season {
+  id        String   @id @default(cuid())
+  dynastyId String
+  year      Int
+  label     String? // e.g. "2027 Season"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dynasty   Dynasty  @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  weeks     Week[]
+  games     Game[]
+  rankingSnapshots       RankingSnapshot[]
+  standingSnapshots      ConferenceStandingSnapshot[]
+  playerSeasonStats      PlayerSeasonStat[]
+  teamSeasonStats        TeamSeasonStat[]
+  awardWinners           AwardWinner[]
+
+  @@unique([dynastyId, year])
+  @@index([dynastyId])
+}
+
+model Week {
+  id        String   @id @default(cuid())
+  seasonId  String
+  number    Int
+  type      WeekType @default(REGULAR)
+
+  season    Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  games     Game[]
+  rankingSnapshots  RankingSnapshot[]
+  standingSnapshots ConferenceStandingSnapshot[]
+
+  @@unique([seasonId, number, type])
+  @@index([seasonId])
+}
+
+// ────────────────────────────────── Teams / People ───────────────────────────────────────
+
+model Conference {
+  id         String  @id @default(cuid())
+  dynastyId  String
+  name       String
+  abbreviation String?
+
+  dynasty    Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  teams      Team[]
+  standingSnapshots ConferenceStandingSnapshot[]
+
+  @@unique([dynastyId, name])
+  @@index([dynastyId])
+}
+
+model Team {
+  id           String  @id @default(cuid())
+  dynastyId    String
+  conferenceId String?
+  name         String
+  nickname     String? // mascot
+  abbreviation String?
+  primaryColor String?
+  secondaryColor String?
+  logoUrl      String?
+  isUserControlled Boolean @default(false)
+
+  sourceUploadId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  dynasty      Dynasty     @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  conference   Conference? @relation(fields: [conferenceId], references: [id])
+  sourceUpload Upload?     @relation("TeamSource", fields: [sourceUploadId], references: [id])
+
+  players      Player[]
+  coaches      Coach[]
+  homeGames    Game[]  @relation("HomeTeam")
+  awayGames    Game[]  @relation("AwayTeam")
+  rankingEntries    RankingEntry[]
+  standingEntries   StandingEntry[]
+  teamGameStats     TeamGameStat[]
+  teamSeasonStats   TeamSeasonStat[]
+  schoolRecords     SchoolRecord[]
+
+  @@unique([dynastyId, name])
+  @@index([dynastyId])
+  @@index([conferenceId])
+}
+
+model Player {
+  id         String     @id @default(cuid())
+  dynastyId  String
+  teamId     String?
+  name       String
+  position   String?
+  jersey     Int?
+  classYear  ClassYear?
+  heightIn   Int?
+  weightLb   Int?
+  hometown   String?
+
+  sourceUploadId String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  dynasty    Dynasty    @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  team       Team?      @relation(fields: [teamId], references: [id])
+  sourceUpload Upload?  @relation("PlayerSource", fields: [sourceUploadId], references: [id])
+
+  gameStats    PlayerGameStat[]
+  seasonStats  PlayerSeasonStat[]
+  awardWinners AwardWinner[]
+
+  @@index([dynastyId])
+  @@index([teamId])
+  @@index([name])
+}
+
+model Coach {
+  id         String    @id @default(cuid())
+  dynastyId  String
+  teamId     String?
+  name       String
+  role       CoachRole @default(HEAD_COACH)
+
+  // career aggregates (denormalized for fast profile reads; recomputed from Games)
+  careerWins   Int @default(0)
+  careerLosses Int @default(0)
+
+  sourceUploadId String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  dynasty    Dynasty   @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  team       Team?     @relation(fields: [teamId], references: [id])
+  sourceUpload Upload? @relation("CoachSource", fields: [sourceUploadId], references: [id])
+
+  @@index([dynastyId])
+  @@index([teamId])
+}
+
+// ───────────────────────────────────────── Games ─────────────────────────────────────────
+
+model Game {
+  id         String     @id @default(cuid())
+  seasonId   String
+  weekId     String?
+  homeTeamId String
+  awayTeamId String
+  homeScore  Int?
+  awayScore  Int?
+  status     GameStatus @default(SCHEDULED)
+  kickoff    DateTime?
+  venue      String?
+  isRivalry  Boolean    @default(false)
+  isNeutralSite Boolean @default(false)
+  isConferenceGame Boolean @default(false)
+
+  sourceUploadId String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  season     Season     @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  week       Week?      @relation(fields: [weekId], references: [id])
+  homeTeam   Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  sourceUpload Upload?  @relation("GameSource", fields: [sourceUploadId], references: [id])
+
+  teamGameStats   TeamGameStat[]
+  playerGameStats PlayerGameStat[]
+
+  @@index([seasonId])
+  @@index([weekId])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+}
+
+// ───────────────────────────────────────── Stats ─────────────────────────────────────────
+
+model TeamGameStat {
+  id       String @id @default(cuid())
+  gameId   String
+  teamId   String
+
+  totalYards    Int?
+  passingYards  Int?
+  rushingYards  Int?
+  firstDowns    Int?
+  turnovers     Int?
+  penalties     Int?
+  penaltyYards  Int?
+  possessionSec Int?
+  thirdDownConv String?
+  fourthDownConv String?
+
+  game     Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  team     Team @relation(fields: [teamId], references: [id])
+
+  @@unique([gameId, teamId])
+  @@index([teamId])
+}
+
+model PlayerGameStat {
+  id       String @id @default(cuid())
+  gameId   String
+  playerId String
+
+  // passing
+  passComp   Int?
+  passAtt    Int?
+  passYards  Int?
+  passTd     Int?
+  passInt    Int?
+  // rushing
+  rushAtt    Int?
+  rushYards  Int?
+  rushTd     Int?
+  // receiving
+  rec        Int?
+  recYards   Int?
+  recTd      Int?
+  // defense
+  tackles    Int?
+  sacks      Float?
+  defInt     Int?
+  forcedFumbles Int?
+  // kicking
+  fgMade     Int?
+  fgAtt      Int?
+
+  sourceUploadId String?
+
+  game     Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player   Player @relation(fields: [playerId], references: [id])
+  sourceUpload Upload? @relation("PlayerGameStatSource", fields: [sourceUploadId], references: [id])
+
+  @@unique([gameId, playerId])
+  @@index([playerId])
+}
+
+model PlayerSeasonStat {
+  id       String @id @default(cuid())
+  seasonId String
+  playerId String
+
+  gamesPlayed Int?
+  passYards Int?  @default(0)
+  passTd    Int?  @default(0)
+  passInt   Int?  @default(0)
+  rushYards Int?  @default(0)
+  rushTd    Int?  @default(0)
+  recYards  Int?  @default(0)
+  recTd     Int?  @default(0)
+  tackles   Int?  @default(0)
+  sacks     Float? @default(0)
+  defInt    Int?  @default(0)
+
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  player   Player @relation(fields: [playerId], references: [id])
+
+  @@unique([seasonId, playerId])
+  @@index([playerId])
+}
+
+model TeamSeasonStat {
+  id       String @id @default(cuid())
+  seasonId String
+  teamId   String
+
+  wins     Int @default(0)
+  losses   Int @default(0)
+  confWins Int @default(0)
+  confLosses Int @default(0)
+  pointsFor Int @default(0)
+  pointsAgainst Int @default(0)
+
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  team     Team   @relation(fields: [teamId], references: [id])
+
+  @@unique([seasonId, teamId])
+  @@index([teamId])
+}
+
+// ──────────────────────────────── Rankings (snapshots) ───────────────────────────────────
+
+model RankingSnapshot {
+  id       String   @id @default(cuid())
+  seasonId String
+  weekId   String?
+  pollType PollType
+  capturedAt DateTime @default(now())
+
+  sourceUploadId String?
+
+  season   Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  week     Week?    @relation(fields: [weekId], references: [id])
+  sourceUpload Upload? @relation("RankingSource", fields: [sourceUploadId], references: [id])
+  entries  RankingEntry[]
+
+  @@unique([seasonId, weekId, pollType])
+  @@index([seasonId])
+}
+
+model RankingEntry {
+  id         String @id @default(cuid())
+  snapshotId String
+  teamId     String
+  rank       Int
+  previousRank Int?
+  record     String? // "10-1"
+  points     Int?
+
+  snapshot   RankingSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  team       Team            @relation(fields: [teamId], references: [id])
+
+  @@unique([snapshotId, rank])
+  @@index([teamId])
+}
+
+// ──────────────────────────── Conference Standings (snapshots) ───────────────────────────
+
+model ConferenceStandingSnapshot {
+  id           String @id @default(cuid())
+  seasonId     String
+  weekId       String?
+  conferenceId String
+  capturedAt   DateTime @default(now())
+
+  sourceUploadId String?
+
+  season       Season     @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  week         Week?      @relation(fields: [weekId], references: [id])
+  conference   Conference @relation(fields: [conferenceId], references: [id])
+  sourceUpload Upload?    @relation("StandingSource", fields: [sourceUploadId], references: [id])
+  entries      StandingEntry[]
+
+  @@unique([seasonId, weekId, conferenceId])
+  @@index([seasonId])
+}
+
+model StandingEntry {
+  id         String @id @default(cuid())
+  snapshotId String
+  teamId     String
+  confWins   Int
+  confLosses Int
+  overallWins Int
+  overallLosses Int
+  rank       Int?
+
+  snapshot   ConferenceStandingSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  team       Team @relation(fields: [teamId], references: [id])
+
+  @@unique([snapshotId, teamId])
+  @@index([teamId])
+}
+
+// ───────────────────────────────────────── Awards ────────────────────────────────────────
+
+model Award {
+  id        String  @id @default(cuid())
+  dynastyId String
+  name      String  // "Heisman", "Biletnikoff", ...
+  description String?
+
+  dynasty   Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  winners   AwardWinner[]
+
+  @@unique([dynastyId, name])
+  @@index([dynastyId])
+}
+
+model AwardWinner {
+  id       String @id @default(cuid())
+  awardId  String
+  seasonId String
+  playerId String?
+  isFinalist Boolean @default(false)
+  rank     Int? // for Heisman watch ordering
+
+  sourceUploadId String?
+
+  award    Award   @relation(fields: [awardId], references: [id], onDelete: Cascade)
+  season   Season  @relation(fields: [seasonId], references: [id])
+  player   Player? @relation(fields: [playerId], references: [id])
+  sourceUpload Upload? @relation("AwardSource", fields: [sourceUploadId], references: [id])
+
+  @@index([awardId])
+  @@index([seasonId])
+}
+
+// ───────────────────────────────── Records / History ─────────────────────────────────────
+
+model SchoolRecord {
+  id        String      @id @default(cuid())
+  dynastyId String
+  teamId    String?
+  scope     RecordScope @default(SCHOOL)
+  category  String      // "Single-game passing yards"
+  holder    String      // player/team name as displayed
+  value     String      // "512"
+  context   String?     // "vs Ohio State, 2027"
+  year      Int?
+
+  sourceUploadId String?
+
+  dynasty   Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+  team      Team?   @relation(fields: [teamId], references: [id])
+  sourceUpload Upload? @relation("SchoolRecordSource", fields: [sourceUploadId], references: [id])
+
+  @@index([dynastyId])
+  @@index([teamId])
+}
+
+model HistoricalRecord {
+  id        String               @id @default(cuid())
+  dynastyId String
+  kind      HistoricalRecordKind
+  year      Int?
+  teamName  String?
+  detail    String? // free-form context ("beat Alabama 34-31 in Rose Bowl")
+  data      Json? // structured payload
+
+  dynasty   Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+
+  @@index([dynastyId])
+  @@index([kind])
+}
+
+model TimelineEvent {
+  id        String            @id @default(cuid())
+  dynastyId String
+  type      TimelineEventType
+  seasonYear Int?
+  weekNumber Int?
+  title     String
+  summary   String?
+  data      Json?
+  occurredAt DateTime @default(now())
+
+  dynasty   Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+
+  @@index([dynastyId])
+  @@index([type])
+}
+
+// ─────────────────────────────────── AI Content ──────────────────────────────────────────
+
+model NewsArticle {
+  id        String        @id @default(cuid())
+  dynastyId String
+  type      ArticleType
+  status    ArticleStatus @default(DRAFT)
+  headline  String
+  subhead   String?
+  body      String        @db.Text
+  seasonYear Int?
+  weekNumber Int?
+  heroImageUrl String?
+
+  // provenance: the exact verified facts packet the article was generated from.
+  sourceData Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  publishedAt DateTime?
+
+  dynasty   Dynasty @relation(fields: [dynastyId], references: [id], onDelete: Cascade)
+
+  @@index([dynastyId])
+  @@index([type])
+  @@index([status])
+}
+
+// ─────────────────────────── Ingestion / Staging (source of truth guard) ─────────────────
+
+model Upload {
+  id          String       @id @default(cuid())
+  dynastyId   String?
+  originalName String
+  storageKey  String       // path/key in the storage backend
+  publicUrl   String?      // served thumbnail/preview if any
+  mimeType    String
+  sizeBytes   Int
+  contentHash String       @unique // idempotency: same screenshot -> same hash
+  screenType  ScreenType   @default(UNKNOWN)
+  status      UploadStatus @default(UPLOADED)
+  detectionConfidence Float?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dynasty     Dynasty?      @relation(fields: [dynastyId], references: [id])
+  parseResults ParseResult[]
+
+  // reverse provenance relations
+  teams        Team[]        @relation("TeamSource")
+  players      Player[]      @relation("PlayerSource")
+  coaches      Coach[]       @relation("CoachSource")
+  games        Game[]        @relation("GameSource")
+  playerGameStats PlayerGameStat[] @relation("PlayerGameStatSource")
+  rankingSnapshots RankingSnapshot[] @relation("RankingSource")
+  standingSnapshots ConferenceStandingSnapshot[] @relation("StandingSource")
+  awardWinners AwardWinner[] @relation("AwardSource")
+  schoolRecords SchoolRecord[] @relation("SchoolRecordSource")
+
+  @@index([dynastyId])
+  @@index([status])
+  @@index([screenType])
+}
+
+// One parser run over one upload. Holds raw structured extraction + confidence,
+// BEFORE it is validated/promoted into canonical tables (Phase 2).
+model ParseResult {
+  id         String   @id @default(cuid())
+  uploadId   String
+  screenType ScreenType
+  parserVersion String
+  rawData    Json     // structured fields as the parser read them
+  confidence Float    // overall confidence 0..1
+  createdAt  DateTime @default(now())
+
+  upload     Upload   @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  entities   ExtractedEntity[]
+
+  @@index([uploadId])
+}
+
+// Candidate canonical rows awaiting validation/merge. Never read by the frontend.
+model ExtractedEntity {
+  id            String  @id @default(cuid())
+  parseResultId String
+  entityType    String  // "Player", "Game", "RankingEntry", ...
+  payload       Json
+  confidence    Float
+  isValidated   Boolean @default(false)
+  mergedIntoId  String? // canonical row id once promoted
+
+  parseResult   ParseResult @relation(fields: [parseResultId], references: [id], onDelete: Cascade)
+
+  @@index([parseResultId])
+  @@index([entityType])
+}
