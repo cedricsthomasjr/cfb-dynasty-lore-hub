@@ -8,7 +8,9 @@ teams + upload-domain foundation. This file is the fast orientation.
 The **database is the single source of truth**. Vision/manual input →
 **staging** (`ParseResult`, `ExtractedEntity`) → **human review** → **canonical
 promotion**. AI and UI never invent stats. Nothing writes canonical tables
-outside the Phase 3 promotion path — ingestion only ever stages candidates.
+outside the promotion path (`src/lib/promotion`, Phase 3) — ingestion only ever
+stages candidates, and read pages render only what the DB holds (never fake
+data; use `EmptyState` when a canonical table is empty).
 
 ## Registry patterns (extend by adding a file, never a switch)
 
@@ -18,6 +20,12 @@ outside the Phase 3 promotion path — ingestion only ever stages candidates.
   `UploadDomain`. Register in `domains/index.ts`. A guard throws if any
   `UploadDomain` value lacks a handler. Adding a domain = one handler file +
   one `registerDomain()` line.
+- **Promotion registry** (`src/lib/promotion/`): one `Promoter` per
+  `ExtractedEntity.entityType`. Register in `promoters/index.ts`. `promoteUpload`
+  runs all of an upload's approved entities in one transaction; it's idempotent
+  (skips entities already carrying `mergedIntoId`) and records unresolvable ones
+  as skips instead of failing. Entity types without a promoter stay
+  validated-but-unpromoted. Adding one = one promoter file + one line.
 
 Use the existing seams: `getStorage()`, `getVision()`, the `prisma` singleton,
 `runVisionTool` + Zod for extraction, and staging-only writes.

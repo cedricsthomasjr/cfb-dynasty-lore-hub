@@ -44,6 +44,25 @@ intentionally not built yet.
 ### Phase 3 — Canonical Data & Core Read Pages
 Promote validated staging data into canonical entities. Build the real data-backed pages: Rankings (Top 25 / CFP), Standings, Schedule, Game Center, Team pages, Player/Coach profiles. Everything reads from canonical tables.
 
+**Implemented so far:**
+- **Promotion engine** (`src/lib/promotion/`) — a registry of promoters, one per
+  `ExtractedEntity.entityType`, parallel to the parser/domain registries.
+  `promoteUpload` runs an upload's human-approved entities in a single
+  transaction: find-or-create Season/Week/Team/Conference/Player, upsert on
+  natural unique keys (idempotent), stamp provenance (`sourceUploadId`), and set
+  `ExtractedEntity.mergedIntoId`. Unresolvable entities (e.g. no season year) are
+  recorded as skips, never corrupting canonical data. Wired into
+  `POST /api/uploads/[id]/validate`, which now promotes then marks `VALIDATED`.
+  Promoters exist for rankings, standings, games, player game stats, roster
+  players, and team logo/identity.
+- **Canonical read pages** — Top 25, CFP, Conference Standings, Teams (directory
+  + detail with roster and recent games), and Players now read from canonical
+  tables via `getActiveDynasty()`, with honest `EmptyState`s when empty.
+
+**Still to build:** Schedule, Game Center, Coach profiles, season/career stat
+rollups, and promoters for entity types not yet produced (team season/game
+stats, awards). No core change is required to add them.
+
 ### Phase 4 — Historical Memory & Aggregations
 Season rollups, career aggregates, championship/bowl/rivalry records, School Records, League Records, Season History, Dynasty Timeline. Denormalized snapshot tables + materialized aggregates for fast reads.
 

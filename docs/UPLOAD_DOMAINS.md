@@ -172,10 +172,20 @@ The backend contract exists; these pages are a Phase 2.5 follow-up. See
 /upload/league/standings
 ```
 
-## 8. What remains for Phase 3
+## 8. Phase 3 — canonical promotion (implemented)
 
-- Promote validated `ExtractedEntity` rows into canonical tables (write
-  `Team.logoUrl`, `Player`, `PlayerGameStat`, `RankingSnapshot`, etc.).
-- Resolve `GAME_BOX_SCORE` participants (home/away teams) at promotion time.
-- Build the per-domain upload pages above.
+Validated `ExtractedEntity` rows are now promoted into canonical tables by the
+promotion engine (`src/lib/promotion/`), triggered from
+`POST /api/uploads/[id]/validate`. See `ARCHITECTURE.md` § Phase 3 for the
+registry pattern. Promoters exist for `RankingSnapshot`/`RankingEntry`,
+`ConferenceStandingSnapshot`/`StandingEntry`, `Game`, `PlayerGameStat`, `Player`,
+`TeamLogo`, and `TeamIdentity` (the last two write onto the canonical `Team`).
+Read pages (Top 25, CFP, Standings, Teams, Players) render the promoted data.
+
+### Still open
+
+- Per-domain upload pages (§7) — still not built.
+- Promoters for entity types no producer emits yet (team season/game stats,
+  awards, coach profiles); box-score `TeamGameStat`.
+- Schedule / Game Center / Coach pages and stat rollups (Phase 3/4).
 - Replace stub auth with a real provider (swap `getCurrentUser`).
