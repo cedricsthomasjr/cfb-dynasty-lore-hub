@@ -61,6 +61,18 @@ const FIXTURES: Record<string, unknown> = {
       { team: "Alabama", confWins: 3, confLosses: 2, overallWins: 6, overallLosses: 2 },
     ],
   },
+  extract_team_schedule: {
+    team: "Alabama",
+    seasonYear: 2027,
+    confidence: 0.87,
+    games: [
+      { week: 1, opponent: "Georgia", homeAway: "HOME" },
+      { week: 2, opponent: "Auburn", homeAway: "AWAY" },
+      { week: 3, opponent: "Tennessee", homeAway: "HOME" },
+      { week: 4, opponent: "LSU", homeAway: "AWAY" },
+      { week: 5, opponent: "Texas", homeAway: "HOME" },
+    ],
+  },
   extract_box_score: {
     seasonYear: 2027,
     week: 8,

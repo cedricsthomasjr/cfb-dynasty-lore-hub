@@ -17,14 +17,18 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-64 shrink-0 border-r bg-card md:flex md:flex-col">
-      <div className="flex h-16 items-center gap-2 border-b px-6">
+      <Link
+        href="/"
+        title="Switch dynasty"
+        className="flex h-16 items-center gap-2 border-b px-6 transition-colors hover:bg-secondary/50"
+      >
         <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
           <Trophy className="h-5 w-5" />
         </span>
         <span className="font-display text-lg font-bold tracking-tight">
           {APP_NAME}
         </span>
-      </div>
+      </Link>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {NAV_SECTIONS.map((section) => (

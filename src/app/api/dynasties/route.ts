@@ -11,6 +11,9 @@ export const runtime = "nodejs";
  */
 export async function GET() {
   const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
   const memberships = await prisma.dynastyMembership.findMany({
     where: { userId: user.id },
     include: { dynasty: true, controlledTeam: true },
@@ -46,6 +49,9 @@ export async function POST(req: NextRequest) {
   }
 
   const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
   try {
     const result = await createDynasty({ name: body.name, userId: user.id });
     return NextResponse.json(result, { status: 201 });

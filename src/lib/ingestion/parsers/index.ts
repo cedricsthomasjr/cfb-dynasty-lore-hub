@@ -3,6 +3,7 @@ import { top25Parser } from "./top25";
 import { cfpRankingsParser } from "./cfp-rankings";
 import { conferenceStandingsParser } from "./conference-standings";
 import { boxScoreParser } from "./box-score";
+import { scheduleParser } from "./schedule";
 
 /**
  * Register all built-in parsers. Importing this module wires the registry.
@@ -18,6 +19,7 @@ export function registerAllParsers(): void {
   registerParser(cfpRankingsParser);
   registerParser(conferenceStandingsParser);
   registerParser(boxScoreParser);
+  registerParser(scheduleParser);
   registered = true;
 }
 

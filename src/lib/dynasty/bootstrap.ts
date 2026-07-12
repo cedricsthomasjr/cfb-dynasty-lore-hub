@@ -121,6 +121,30 @@ export async function createDynasty(input: {
 }
 
 /**
+ * Join an existing dynasty by id: create the caller's membership (no controlled
+ * team yet). Open join — any signed-in user may join any dynasty by id; access
+ * gating (invite codes) is a later concern. Idempotent via the membership
+ * unique, so re-joining is a no-op.
+ */
+export async function joinDynasty(input: {
+  dynastyId: string;
+  userId: string;
+}): Promise<DynastyMembership> {
+  const dynasty = await prisma.dynasty.findUnique({
+    where: { id: input.dynastyId },
+  });
+  if (!dynasty) throw new BootstrapError("Dynasty not found.", 404);
+
+  return prisma.dynastyMembership.upsert({
+    where: {
+      userId_dynastyId: { userId: input.userId, dynastyId: input.dynastyId },
+    },
+    update: {},
+    create: { userId: input.userId, dynastyId: input.dynastyId },
+  });
+}
+
+/**
  * Point a user's membership at an existing dynasty Team, keeping
  * Team.isUserControlled in sync. Creates the membership if the user is joining a
  * dynasty they didn't create. Rejects a team already controlled by someone else.

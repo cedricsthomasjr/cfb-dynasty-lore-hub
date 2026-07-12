@@ -166,9 +166,15 @@ model Dynasty {
   id        String   @id @default(cuid())
   name      String
   schoolName String? // the user-controlled program
+  // Where the dynasty currently sits in time. Points at a Week (which carries
+  // its number + WeekType: preseason, regular, championship, offseason…). Null
+  // until the schedule is created during onboarding. The season is derivable via
+  // currentWeek.season, so a single pointer captures the whole "state".
+  currentWeekId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  currentWeek  Week?    @relation("DynastyCurrentWeek", fields: [currentWeekId], references: [id])
   seasons      Season[]
   conferences  Conference[]
   teams        Team[]
@@ -194,6 +200,11 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  // Local username/password auth. Nullable so pre-auth stub users (seeded by
+  // DEV_USER_EMAIL) remain valid; a signed-up user has both set. passwordHash
+  // is scrypt("scrypt$salt$hash") — never a plaintext password. See src/lib/auth.
+  username     String? @unique
+  passwordHash String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -274,6 +285,7 @@ model Week {
   games     Game[]
   rankingSnapshots  RankingSnapshot[]
   standingSnapshots ConferenceStandingSnapshot[]
+  currentForDynasties Dynasty[] @relation("DynastyCurrentWeek")
 
   @@unique([seasonId, number, type])
   @@index([seasonId])

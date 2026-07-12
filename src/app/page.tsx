@@ -1,144 +1,113 @@
-import Link from "next/link";
-import {
-  Upload,
-  Newspaper,
-  ListOrdered,
-  Radio,
-  Trophy,
-  GitBranch,
-  ArrowRight,
-  Database,
-} from "lucide-react";
-import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+import { Trophy, LogOut, ArrowRight, Users } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
+import { logout } from "@/lib/auth/actions";
+import { diveIntoDynasty } from "@/lib/dynasty/actions";
+import { APP_NAME } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CreateJoinDynasty } from "./home-actions";
 
-const quickLinks = [
-  {
-    href: "/news",
-    title: "Latest News",
-    description: "AI-written headlines from verified results.",
-    icon: Newspaper,
-  },
-  {
-    href: "/rankings",
-    title: "Top 25",
-    description: "Weekly poll snapshots with movement.",
-    icon: ListOrdered,
-  },
-  {
-    href: "/games",
-    title: "Game Center",
-    description: "Box scores, recaps, and previews.",
-    icon: Radio,
-  },
-  {
-    href: "/cfp",
-    title: "CFP Race",
-    description: "Playoff picture as it develops.",
-    icon: Trophy,
-  },
-  {
-    href: "/timeline",
-    title: "Dynasty Timeline",
-    description: "Every milestone in your program's history.",
-    icon: GitBranch,
-  },
-  {
-    href: "/upload",
-    title: "Upload Screenshot",
-    description: "Feed the database from your Xbox save.",
-    icon: Upload,
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function LeagueHomePage() {
+export default async function HomePage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const memberships = await prisma.dynastyMembership.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    include: { dynasty: true, controlledTeam: true },
+  });
+
+  const displayName = user.username ?? user.name ?? "coach";
+
   return (
-    <div className="mx-auto max-w-6xl">
-      <PageHeader
-        title="League Home"
-        description="Your dynasty's front page — powered entirely by verified data."
-        action={
-          <Button asChild>
-            <Link href="/upload">
-              <Upload className="h-4 w-4" />
-              Upload Screenshot
-            </Link>
-          </Button>
-        }
-      />
-
-      {/* Hero */}
-      <Card className="mb-8 overflow-hidden border-0 bg-gradient-to-br from-primary to-primary/70 text-primary-foreground">
-        <CardContent className="flex flex-col gap-4 p-8 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-2xl space-y-3">
-            <Badge variant="accent" className="uppercase tracking-wide">
-              Phase 1 · Foundation
-            </Badge>
-            <h2 className="font-display text-2xl font-bold md:text-3xl">
-              The database is the source of truth.
-            </h2>
-            <p className="text-sm text-primary-foreground/90 md:text-base">
-              Upload Xbox screenshots and this hub will detect the screen, parse
-              the data, and build an ESPN-quality history of your program — no
-              invented stats, ever. Start by uploading your first screenshot.
-            </p>
-          </div>
-          <Button variant="secondary" size="lg" asChild>
-            <Link href="/upload">
-              Get started
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Empty-state notice — honest about Phase 1 */}
-      <Card className="mb-8 border-dashed">
-        <CardContent className="flex items-center gap-4 py-6">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground">
-            <Database className="h-5 w-5" />
+    <div className="min-h-screen bg-secondary/30">
+      {/* Top bar */}
+      <header className="flex items-center justify-between border-b bg-background px-6 py-4">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Trophy className="h-5 w-5" />
           </span>
-          <div>
-            <p className="font-medium">No dynasty data yet</p>
-            <p className="text-sm text-muted-foreground">
-              Upload a screenshot: the screen is detected, parsed into structured
-              data, and queued for your review. Approved data becomes canonical
-              and populates these pages.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+          <span className="font-display text-lg font-bold tracking-tight">
+            {APP_NAME}
+          </span>
+        </div>
+        <form action={logout}>
+          <button
+            type="submit"
+            className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </button>
+        </form>
+      </header>
 
-      {/* Quick links */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {quickLinks.map((link) => {
-          const Icon = link.icon;
-          return (
-            <Link key={link.href} href={link.href} className="group">
-              <Card className="h-full transition-colors hover:border-primary/50 hover:bg-secondary/50">
-                <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <CardTitle className="flex items-center justify-between text-base">
-                    {link.title}
-                    <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                  </CardTitle>
-                  <CardDescription>{link.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          );
-        })}
-      </div>
+      <main className="mx-auto max-w-3xl px-6 py-12">
+        <div className="mb-8">
+          <h1 className="font-display text-3xl font-bold tracking-tight">
+            Welcome back, {displayName}
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            Jump back into a dynasty you run, or start a new one.
+          </p>
+        </div>
+
+        {/* Your dynasties */}
+        <section className="mb-10">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Your dynasties
+          </h2>
+          {memberships.length === 0 ? (
+            <div className="rounded-lg border border-dashed bg-background p-8 text-center">
+              <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+                <Users className="h-6 w-6" />
+              </span>
+              <p className="font-medium">No dynasties yet</p>
+              <p className="text-sm text-muted-foreground">
+                Create your first dynasty or join one below to get started.
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {memberships.map((m) => (
+                <li key={m.id}>
+                  <form action={diveIntoDynasty}>
+                    <input type="hidden" name="dynastyId" value={m.dynastyId} />
+                    <button
+                      type="submit"
+                      className="group flex w-full items-center gap-4 rounded-lg border bg-background p-4 text-left transition-colors hover:border-primary/50 hover:bg-secondary/50"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Trophy className="h-5 w-5" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-medium">
+                          {m.dynasty.name}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {m.controlledTeam
+                            ? `You control ${m.controlledTeam.name}`
+                            : "No team picked yet"}
+                        </span>
+                      </span>
+                      {m.controlledTeam ? null : (
+                        <Badge variant="secondary">Finish setup</Badge>
+                      )}
+                      <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Create / join */}
+        <CreateJoinDynasty />
+      </main>
     </div>
   );
 }

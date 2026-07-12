@@ -29,6 +29,9 @@ export async function POST(
   }
 
   const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
   try {
     const result = await setControlledTeamCustom({
       dynastyId: params.id,

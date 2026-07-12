@@ -37,7 +37,7 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     title: "Overview",
     items: [
-      { label: "League Home", href: "/", icon: Home },
+      { label: "League Home", href: "/dashboard", icon: Home },
       { label: "Weekly Dashboard", href: "/weekly", icon: CalendarDays },
       { label: "Latest News", href: "/news", icon: Newspaper },
     ],

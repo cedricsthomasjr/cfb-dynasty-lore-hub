@@ -93,6 +93,9 @@ export async function resolveUploadRequest(input: {
   }
 
   const user = await getCurrentUser();
+  if (!user) {
+    throw new UploadRequestError("Not authenticated.", 401);
+  }
   const membership = await prisma.dynastyMembership.findUnique({
     where: { userId_dynastyId: { userId: user.id, dynastyId } },
   });
